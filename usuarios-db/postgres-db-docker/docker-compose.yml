@@ -1,0 +1,17 @@
+services:
+  local-db-postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: usuarios_postgres_database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - postgres-compose-network
+    
+networks:
+  postgres-compose-network:
+    driver: bridge
