@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: usuarios-api
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/usuarios_postgres_database
+    username: admin
+    password: 1234
+  jpa:
+    show-sql: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+server:
+  port: 0
