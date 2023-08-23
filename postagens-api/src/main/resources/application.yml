@@ -1,0 +1,17 @@
+spring:
+    application:
+        name: postagens-api
+    data:
+        mongodb:
+            uri: mongodb://admin:1234@localhost:27019/tcc_postagens?authSource=admin
+            database: tcc_postagens
+            auto-index-creation: true
+
+eureka:
+    instance:
+        instance-id: ${spring.application.name}:${random.int}
+    client:
+        service-url:
+            defaultZone: http://localhost:8081/eureka
+server:
+    port: 0
