@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: auth-server
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/usuarios_postgres_database
+    username: admin
+    password: 1234
+  jpa:
+    show-sql: true
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+server:
+  port: 0
+
+env:
+  var:
+    jwt-secret: $2a$12$2gGHirs6r5SUgsyxJJ0aJuJiPCH9v4b2XrzkNB1tz0YFm2FND7laO
+
