@@ -34,6 +34,18 @@ public class Usuario {
     @ManyToMany(mappedBy = "usuariosSeguidos")
     private List<Usuario> usuariosSeguidores = new ArrayList<>();
 
+    public Usuario(String username, String encryptedPassword) {
+        this.id = null;
+        this.username =username;
+        this.password = encryptedPassword;
+    }
+
+    public Usuario(Long id, String username, String encryptedPassword) {
+        this.id = id;
+        this.username =username;
+        this.password = encryptedPassword;
+    }
+
     public Usuario(UsuarioInputDTO usuarioDTO) {
         this.id = null;
         this.username = usuarioDTO.username();

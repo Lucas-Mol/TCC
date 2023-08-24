@@ -42,8 +42,8 @@ public class UsuarioController {
         return ResponseEntity.created(uri).body(usuario);
     }
 
-    @PutMapping
-    public ResponseEntity<UsuarioOutputDTO> atualizar(@RequestBody @NotNull Long id, @RequestBody @Valid UsuarioInputDTO usuarioDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioOutputDTO> atualizar(@PathVariable @NotNull Long id, @RequestBody @Valid UsuarioInputDTO usuarioDTO) {
         var usuarioAtualizado =  usuarioService.atualizar(id, usuarioDTO);
 
         return ResponseEntity.ok(usuarioAtualizado);

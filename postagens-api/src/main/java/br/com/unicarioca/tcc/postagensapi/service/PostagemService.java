@@ -29,8 +29,8 @@ public class PostagemService {
         return new PostagemDTO(postagem);
     }
 
-    public PostagemDTO editar(PostagemEdicaoDTO postagemDTO) {
-        return this.editar(postagemDTO.id(), postagemDTO.texto());
+    public PostagemDTO editar(String id, PostagemEdicaoDTO postagemDTO) {
+        return this.editar(id, postagemDTO.texto());
     }
 
     public PostagemDTO editar(String id, String texto) {

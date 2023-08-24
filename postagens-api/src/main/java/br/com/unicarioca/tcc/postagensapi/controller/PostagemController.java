@@ -65,9 +65,9 @@ public class PostagemController {
         return ResponseEntity.created(uri).body(postagem);
     }
 
-    @PutMapping
-    public ResponseEntity<PostagemDTO> editar(@RequestBody @Valid PostagemEdicaoDTO postagemDTO) {
-        var postagemEditada =  service.editar(postagemDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<PostagemDTO> editar(@PathVariable @NotBlank String id, @RequestBody @Valid PostagemEdicaoDTO postagemDTO) {
+        var postagemEditada =  service.editar(id, postagemDTO);
 
         return ResponseEntity.ok(postagemEditada);
     }
