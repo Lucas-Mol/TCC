@@ -27,11 +27,10 @@ public class LoginService {
     }
 
     private Usuario getUsuario(LoginInputDTO loginDTO) throws CredenciaisInvalidasException {
-        try {
-            return repository.findUsuarioByUsername(loginDTO.username());
-        } catch (Exception ex) {
-            throw new CredenciaisInvalidasException();
-        }
+        return repository
+                .findUsuarioByUsername(loginDTO.username())
+                .orElseThrow(CredenciaisInvalidasException::new);
+
     }
 
     private void validaSenhaUsuario(LoginInputDTO loginDTO, Usuario usuario) throws CredenciaisInvalidasException {

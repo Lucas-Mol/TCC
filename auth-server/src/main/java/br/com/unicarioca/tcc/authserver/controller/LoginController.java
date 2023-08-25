@@ -1,5 +1,6 @@
 package br.com.unicarioca.tcc.authserver.controller;
 
+import br.com.unicarioca.tcc.authserver.dto.ErroDTO;
 import br.com.unicarioca.tcc.authserver.dto.LoginInputDTO;
 import br.com.unicarioca.tcc.authserver.dto.TokenDTO;
 import br.com.unicarioca.tcc.authserver.exception.CredenciaisInvalidasException;
@@ -26,7 +27,7 @@ public class LoginController {
         try {
             return ResponseEntity.ok(new TokenDTO(service.autentica(loginDTO)));
         } catch (CredenciaisInvalidasException e) {
-            return ResponseEntity.badRequest().body("Credenciais inválidas");
+            return ResponseEntity.badRequest().body(new ErroDTO("Credenciais inválidas"));
         }
     }
 
