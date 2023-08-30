@@ -20,4 +20,6 @@ spring:
 
 env:
   var:
-    allowed_paths: '/auth-server/login||/auth-server/token||/usuarios-api/usuarios'
+    service-name: api-gateway
+    service-password: $2a$12$hJF
+    allowed_paths: '/auth-server/login||/auth-server/service||/auth-server/token/user||/auth-server/token/service||/usuarios-api/usuarios'

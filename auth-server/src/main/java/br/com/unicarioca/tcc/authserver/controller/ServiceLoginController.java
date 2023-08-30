@@ -4,7 +4,8 @@ import br.com.unicarioca.tcc.authserver.dto.ErroDTO;
 import br.com.unicarioca.tcc.authserver.dto.LoginInputDTO;
 import br.com.unicarioca.tcc.authserver.dto.TokenDTO;
 import br.com.unicarioca.tcc.authserver.exception.CredenciaisInvalidasException;
-import br.com.unicarioca.tcc.authserver.service.LoginService;
+import br.com.unicarioca.tcc.authserver.service.ServicesLogin;
+import br.com.unicarioca.tcc.authserver.service.UsersLogin;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/service")
 @Validated
-public class LoginController {
+public class ServiceLoginController {
 
     @Autowired
-    LoginService service;
+    ServicesLogin service;
 
     @PostMapping
     public ResponseEntity logar(@RequestBody @Valid LoginInputDTO loginDTO) {

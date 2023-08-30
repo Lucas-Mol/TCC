@@ -1,11 +1,9 @@
 package br.com.unicarioca.apigateway.apigateway.security;
 
 import br.com.unicarioca.apigateway.apigateway.dto.TokenDTO;
-import br.com.unicarioca.apigateway.apigateway.dto.ValidaTokenDTO;
 import br.com.unicarioca.apigateway.apigateway.exception.PathPermitidoException;
 import br.com.unicarioca.apigateway.apigateway.exception.TokenValidoException;
 import br.com.unicarioca.apigateway.apigateway.service.AuthHttpClientImpl;
-import org.apache.catalina.core.AprLifecycleListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
@@ -17,7 +15,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component

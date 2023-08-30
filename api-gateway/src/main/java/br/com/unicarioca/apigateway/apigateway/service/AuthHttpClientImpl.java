@@ -1,5 +1,6 @@
 package br.com.unicarioca.apigateway.apigateway.service;
 
+import br.com.unicarioca.apigateway.apigateway.dto.LoginDTO;
 import br.com.unicarioca.apigateway.apigateway.dto.TokenDTO;
 import br.com.unicarioca.apigateway.apigateway.dto.ValidaTokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,16 @@ public class AuthHttpClientImpl implements AuthClient {
         String apiUri = getEnderecoServicoAuthNoEureka() + "/token";
 
         return restTemplate.exchange(apiUri, HttpMethod.POST, requestEntity, ValidaTokenDTO.class).getBody();
+    }
+
+    @Override
+    public TokenDTO autenticaServico(LoginDTO loginDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity requestEntity = new HttpEntity<>(loginDTO);
+
+        String apiUri = getEnderecoServicoAuthNoEureka() + "/service";
+
+        return restTemplate.exchange(apiUri, HttpMethod.POST, requestEntity, TokenDTO.class).getBody();
 
     }
 

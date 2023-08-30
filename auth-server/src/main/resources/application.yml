@@ -8,6 +8,11 @@ spring:
     password: 1234
   jpa:
     show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 1234
 
 eureka:
   instance:
@@ -20,5 +25,6 @@ server:
 
 env:
   var:
-    jwt-secret: $2a$12$2gGHirs6r5SUgsyxJJ0aJuJiPCH9v4b2XrzkNB1tz0YFm2FND7laO
+    user-jwt-secret: $2a$12$2gGHirs6r5SUgsyxJJ0aJuJiPCH9v4b2XrzkNB1tz0YFm2FND7laO
+    service-jwt-secret: $2a$12$2gGHirs6r5SUgsyxJJ0aJuJiAH9v4b2XrzkNB1tz0Y173nuAUhD7la1
 

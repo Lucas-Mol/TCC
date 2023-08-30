@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    command: redis-server --appendonly yes --requirepass 1234
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data

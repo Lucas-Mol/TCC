@@ -15,19 +15,21 @@ import java.time.ZoneOffset;
 @Service
 public class JWTService implements TokenService {
 
-    @Value("${env.var.jwt-secret}")
-    private String secret;
+    @Value("${env.var.user-jwt-secret}")
+    private String userSecret;
+    @Value("${env.var.service-jwt-secret}")
+    private String serviceSecret;
 
     private final String JWT_ISSUER = "Auth Server TCC";
 
     @Override
-    public String gerarToken(Usuario usuario) {
+    public String gerarTokenUsuario(Usuario usuario) {
         try {
-            Algorithm algoritmo = Algorithm.HMAC256(secret);
+            Algorithm algoritmo = Algorithm.HMAC256(userSecret);
             return JWT.create()
                     .withIssuer(JWT_ISSUER)
                     .withSubject(String.valueOf(usuario.getId()))
-                    .withExpiresAt(dataExpiracao())
+                    .withExpiresAt(dataExpiracaoTokenUsuario())
                     .sign(algoritmo);
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao gerar token", exception);
@@ -35,9 +37,23 @@ public class JWTService implements TokenService {
     }
 
     @Override
-    public boolean validaToken(String tokenJWT) {
+    public String gerarTokenServico(String noServico) {
         try {
-            Algorithm algoritmo = Algorithm.HMAC256(secret);
+            Algorithm algoritmo = Algorithm.HMAC256(serviceSecret);
+            return JWT.create()
+                    .withIssuer(JWT_ISSUER)
+                    .withSubject(String.valueOf(noServico))
+                    .withExpiresAt(dataExpiracaoTokenServico())
+                    .sign(algoritmo);
+        } catch (JWTCreationException exception){
+            throw new RuntimeException("Erro ao gerar token", exception);
+        }
+    }
+
+    @Override
+    public boolean validaTokenUsuario(String tokenJWT) {
+        try {
+            Algorithm algoritmo = Algorithm.HMAC256(userSecret);
             var decodedJWT = JWT.require(algoritmo)
                     .withIssuer(JWT_ISSUER)
                     .build()
@@ -48,7 +64,25 @@ public class JWTService implements TokenService {
         }
     }
 
-    private Instant dataExpiracao() {
+    @Override
+    public boolean validaTokenServico(String tokenJWT) {
+        try {
+            Algorithm algoritmo = Algorithm.HMAC256(serviceSecret);
+            var decodedJWT = JWT.require(algoritmo)
+                    .withIssuer(JWT_ISSUER)
+                    .build()
+                    .verify(tokenJWT);
+            return decodedJWT != null;
+        } catch (JWTVerificationException exception) {
+            return false;
+        }
+    }
+
+    private Instant dataExpiracaoTokenUsuario() {
         return LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.of("-03:00"));
+    }
+
+    private Instant dataExpiracaoTokenServico() {
+        return LocalDateTime.now().plusMinutes(1).toInstant(ZoneOffset.of("-03:00"));
     }
 }

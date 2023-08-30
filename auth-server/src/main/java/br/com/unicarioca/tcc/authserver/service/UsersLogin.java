@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
+public class UsersLogin {
 
     @Autowired
     UsuarioRepository repository;
@@ -23,7 +23,7 @@ public class LoginService {
         var usuario = getUsuario(loginDTO);
         validaSenhaUsuario(loginDTO, usuario);
 
-        return geraToken(usuario);
+        return gerarToken(usuario);
     }
 
     private Usuario getUsuario(LoginInputDTO loginDTO) throws CredenciaisInvalidasException {
@@ -39,7 +39,7 @@ public class LoginService {
         }
     }
 
-    private String geraToken(Usuario usuario) {
-        return jwtService.gerarToken(usuario);
+    private String gerarToken(Usuario usuario) {
+        return jwtService.gerarTokenUsuario(usuario);
     }
 }
