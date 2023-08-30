@@ -15,3 +15,9 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+  main:
+    web-application-type: reactive
+
+env:
+  var:
+    allowed_paths: '/auth-server/login||/auth-server/token||/usuarios-api/usuarios'
