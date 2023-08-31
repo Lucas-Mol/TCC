@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 
 @Component
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order(2)
 public class ServiceFilter implements WebFilter {
 
     @Value("${env.var.service-name}")
@@ -31,7 +32,10 @@ public class ServiceFilter implements WebFilter {
         var response = authClient.autenticaServico(new LoginDTO(serviceName, servicePassword));
 
         if(response != null && response.token() != null && !response.token().isEmpty()){
-            exchange.getRequest().getHeaders().set("Service Authentication", response.token());
+            ServerHttpRequest request =
+                    exchange.getRequest().mutate().header("service-authentication", response.token()).build();
+
+            exchange.mutate().request(request).build();
         }
 
         return chain.filter(exchange);

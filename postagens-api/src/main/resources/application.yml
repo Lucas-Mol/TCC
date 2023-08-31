@@ -15,3 +15,8 @@ eureka:
             defaultZone: http://localhost:8081/eureka
 server:
     port: 0
+
+env:
+    var:
+        service-name: usuario-api
+        service-password: X7gNkxEZ9un6

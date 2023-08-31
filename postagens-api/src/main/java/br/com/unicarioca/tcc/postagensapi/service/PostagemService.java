@@ -1,11 +1,14 @@
 package br.com.unicarioca.tcc.postagensapi.service;
 
+import br.com.unicarioca.tcc.postagensapi.dto.LoginDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemEdicaoDTO;
+import br.com.unicarioca.tcc.postagensapi.http.AuthClient;
 import br.com.unicarioca.tcc.postagensapi.http.UsuarioClient;
 import br.com.unicarioca.tcc.postagensapi.model.Postagem;
 import br.com.unicarioca.tcc.postagensapi.repository.PostagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,15 @@ public class PostagemService {
 
     @Autowired
     UsuarioClient usuarioClient;
+
+    @Autowired
+    AuthClient authClient;
+
+    @Value("${env.var.service-name}")
+    String serviceName;
+
+    @Value("${env.var.service-password}")
+    String servicePassword;
 
     public PostagemDTO postar(PostagemDTO postagemDTO) {
         var postagem = repository.save(new Postagem(postagemDTO));
@@ -64,7 +76,9 @@ public class PostagemService {
     }
 
     public Page<PostagemDTO> obterPaginacaoPostagensPorSeguidosDoUsuario(String usuario, Pageable paginacao) {
-        var usuarios = usuarioClient.getSeguidosDoUsuario(Long.parseLong(usuario));
+        var token = authClient.geraTokenService(new LoginDTO(serviceName, servicePassword)).token();
+
+        var usuarios = usuarioClient.getSeguidosDoUsuario(token ,Long.parseLong(usuario));
 
         var usuariosId = usuarios.stream()
                 .map(usuarioInputDTO -> String.valueOf(usuarioInputDTO.id()))

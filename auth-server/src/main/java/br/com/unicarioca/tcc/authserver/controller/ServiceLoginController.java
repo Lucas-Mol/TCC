@@ -28,7 +28,7 @@ public class ServiceLoginController {
         try {
             return ResponseEntity.ok(new TokenDTO(service.autentica(loginDTO)));
         } catch (CredenciaisInvalidasException e) {
-            return ResponseEntity.badRequest().body(new ErroDTO("Credenciais inválidas"));
+            return ResponseEntity.ok(new ErroDTO("Credenciais inválidas"));
         }
     }
 

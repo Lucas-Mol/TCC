@@ -51,7 +51,11 @@ public class JWTService implements TokenService {
     }
 
     @Override
-    public boolean validaTokenUsuario(String tokenJWT) {
+    public boolean validaToken(String tokenJWT) {
+        return validaTokenServico(tokenJWT) || validaTokenUsuario(tokenJWT);
+    }
+
+    private boolean validaTokenUsuario(String tokenJWT) {
         try {
             Algorithm algoritmo = Algorithm.HMAC256(userSecret);
             var decodedJWT = JWT.require(algoritmo)
@@ -64,8 +68,7 @@ public class JWTService implements TokenService {
         }
     }
 
-    @Override
-    public boolean validaTokenServico(String tokenJWT) {
+    private boolean validaTokenServico(String tokenJWT) {
         try {
             Algorithm algoritmo = Algorithm.HMAC256(serviceSecret);
             var decodedJWT = JWT.require(algoritmo)
@@ -83,6 +86,6 @@ public class JWTService implements TokenService {
     }
 
     private Instant dataExpiracaoTokenServico() {
-        return LocalDateTime.now().plusMinutes(1).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusSeconds(15).toInstant(ZoneOffset.of("-03:00"));
     }
 }

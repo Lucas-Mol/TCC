@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServicesLogin {
+public class ServicesLogin implements Autenticador {
 
     @Autowired
     ServicesRepository repository;
@@ -20,6 +20,7 @@ public class ServicesLogin {
     @Autowired
     JWTService jwtService;
 
+    @Override
     public String autentica(LoginInputDTO loginDTO) throws CredenciaisInvalidasException {
         var senha = getSenhaPorChave(loginDTO);
         validaSenha(senha, loginDTO.password());

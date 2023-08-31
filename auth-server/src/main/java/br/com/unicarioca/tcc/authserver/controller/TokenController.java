@@ -17,14 +17,9 @@ public class TokenController {
     @Autowired
     JWTService tokenService;
 
-    @PostMapping("/user")
+    @PostMapping
     public ResponseEntity validaTokenUsuario(@RequestBody @Valid TokenDTO tokenDTO) {
-        return ResponseEntity.ok(new ValidaTokenOutputDTO(tokenService.validaTokenUsuario(tokenDTO.token())));
-    }
-
-    @PostMapping("/service")
-    public ResponseEntity validaTokenServico(@RequestBody @Valid TokenDTO tokenDTO) {
-        return ResponseEntity.ok(new ValidaTokenOutputDTO(tokenService.validaTokenServico(tokenDTO.token())));
+        return ResponseEntity.ok(new ValidaTokenOutputDTO(tokenService.validaToken(tokenDTO.token())));
     }
 
 }
