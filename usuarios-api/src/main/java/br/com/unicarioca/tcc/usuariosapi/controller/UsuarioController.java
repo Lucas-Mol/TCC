@@ -3,6 +3,8 @@ package br.com.unicarioca.tcc.usuariosapi.controller;
 import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioInputDTO;
 import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioOutputDTO;
 import br.com.unicarioca.tcc.usuariosapi.service.UsuarioService;
+import br.com.unicarioca.tcc.usuariosapi.service.token.JWTService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    JWTService jwtService;
 
     @GetMapping
     public Page<UsuarioOutputDTO> listarTodos(@PageableDefault(size = 10) Pageable paginacao) {
@@ -42,12 +47,14 @@ public class UsuarioController {
         return ResponseEntity.created(uri).body(usuario);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioOutputDTO> atualizar(@PathVariable @NotNull Long id, @RequestBody @Valid UsuarioInputDTO usuarioDTO) {
-        var usuarioAtualizado =  usuarioService.atualizar(id, usuarioDTO);
+    @PutMapping()
+    public ResponseEntity<UsuarioOutputDTO> atualizar(@RequestBody @Valid UsuarioInputDTO usuarioDTO,
+                                                      HttpServletRequest request) {
+        var token = request.getHeader("Authorization");
+        var idUsuario = Long.parseLong(jwtService.getUsuario(token));
+
+        var usuarioAtualizado =  usuarioService.atualizar(idUsuario, usuarioDTO);
 
         return ResponseEntity.ok(usuarioAtualizado);
     }
-
-
 }

@@ -3,6 +3,8 @@ package br.com.unicarioca.tcc.usuariosapi.controller;
 import br.com.unicarioca.tcc.usuariosapi.dto.SeguirInputDTO;
 import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioOutputDTO;
 import br.com.unicarioca.tcc.usuariosapi.service.RelacionamentoUsuarioService;
+import br.com.unicarioca.tcc.usuariosapi.service.token.JWTService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class RelacionamentoUsuarioController {
     @Autowired
     private RelacionamentoUsuarioService service;
 
+    @Autowired
+    JWTService jwtService;
+
     @GetMapping("/seguidos/{id}")
     public Page<UsuarioOutputDTO> listarUsuariosSeguidos(@PathVariable @NotNull Long id,
                                                          @PageableDefault(size = 10) Pageable paginacao) {
@@ -42,20 +47,34 @@ public class RelacionamentoUsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity seguir(@RequestBody @Valid SeguirInputDTO seguirDTO, UriComponentsBuilder uriBuilder) {
-        service.seguir(seguirDTO);
-        var uri = uriBuilder.path("/usuarios/relacionamentos/seguidos{id}").buildAndExpand(seguirDTO.seguidor()).toUri();
+    public ResponseEntity seguir(@RequestBody @Valid SeguirInputDTO seguirDTO,
+                                 UriComponentsBuilder uriBuilder,
+                                 HttpServletRequest request) {
+
+        var idUsuario = getIdUsuario(request);
+
+        service.seguir(idUsuario, seguirDTO.seguido());
+        var uri = uriBuilder.path("/usuarios/relacionamentos/seguidos{id}").buildAndExpand(idUsuario).toUri();
 
         return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping
-    public ResponseEntity deixarSeguir(@RequestBody @Valid SeguirInputDTO seguirDTO, UriComponentsBuilder uriBuilder) {
-        service.deixarSeguir(seguirDTO);
-        var uri = uriBuilder.path("/usuarios/relacionamentos/seguidos{id}").buildAndExpand(seguirDTO.seguidor()).toUri();
+    public ResponseEntity deixarSeguir(@RequestBody @Valid SeguirInputDTO seguirDTO,
+                                       UriComponentsBuilder uriBuilder,
+                                       HttpServletRequest request) {
+
+        var idUsuario = getIdUsuario(request);
+
+        service.deixarSeguir(idUsuario, seguirDTO.seguido());
+        var uri = uriBuilder.path("/usuarios/relacionamentos/seguidos{id}").buildAndExpand(idUsuario).toUri();
 
         return ResponseEntity.created(uri).build();
     }
 
+    private Long getIdUsuario(HttpServletRequest request) {
+        var token = request.getHeader("Authorization");
+        return Long.parseLong(jwtService.getUsuario(token));
+    }
 
 }

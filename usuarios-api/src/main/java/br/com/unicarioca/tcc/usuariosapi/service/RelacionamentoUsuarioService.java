@@ -38,10 +38,6 @@ public class RelacionamentoUsuarioService {
                 .map(UsuarioOutputDTO::new);
     }
 
-    public void seguir(SeguirInputDTO seguirDTO) {
-        this.seguir(seguirDTO.seguidor(), seguirDTO.seguido());
-    }
-
     public void seguir(Long idSeguidor, Long idSeguido) {
         var seguidor = usuarioRepository
                 .findById(idSeguidor)
@@ -54,10 +50,6 @@ public class RelacionamentoUsuarioService {
         seguidor.getUsuariosSeguidos().add(seguido);
 
         usuarioRepository.save(seguidor);
-    }
-
-    public void deixarSeguir(SeguirInputDTO seguirDTO) {
-        this.deixarSeguir(seguirDTO.seguidor(), seguirDTO.seguido());
     }
 
     public void deixarSeguir(Long idSeguidor, Long idSeguido) {
