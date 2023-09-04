@@ -28,6 +28,7 @@ public class ServiceFilter extends OncePerRequestFilter {
 
             if(responseValidaToken.valido()){
                 filterChain.doFilter(request, response);
+                return;
             }
         }
 
