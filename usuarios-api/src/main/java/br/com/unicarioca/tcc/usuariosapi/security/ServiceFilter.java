@@ -36,9 +36,9 @@ public class ServiceFilter extends OncePerRequestFilter {
 
             if(responseValidaToken.valido()){
                 filterChain.doFilter(request, response);
+                return;
             }
         }
-
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
