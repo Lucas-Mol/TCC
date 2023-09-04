@@ -35,20 +35,19 @@ public class PostagemService {
     @Value("${env.var.service-password}")
     String servicePassword;
 
-    public PostagemDTO postar(PostagemDTO postagemDTO) {
-        var postagem = repository.save(new Postagem(postagemDTO));
+    public PostagemDTO postar(String usuario, PostagemDTO postagemDTO) {
+        var postagem = repository.save(new Postagem(usuario, postagemDTO.texto()));
 
         return new PostagemDTO(postagem);
     }
 
-    public PostagemDTO editar(String id, PostagemEdicaoDTO postagemDTO) {
-        return this.editar(id, postagemDTO.texto());
-    }
 
-    public PostagemDTO editar(String id, String texto) {
+    public PostagemDTO editar(String id, String usuario, String texto) {
         var postagem = repository
                 .findById(id)
                 .orElseThrow(RuntimeException::new);
+
+        if(!usuario.equals(postagem.getUsuario())) throw new RuntimeException();
 
         postagem.setTexto(texto);
 
@@ -57,7 +56,13 @@ public class PostagemService {
         return new PostagemDTO(postagemEditada);
     }
 
-    public void remover(String id) {
+    public void remover(String usuario, String id) {
+        var postagem = repository
+                .findById(id)
+                .orElseThrow(RuntimeException::new);
+
+        if(!usuario.equals(postagem.getUsuario())) throw new RuntimeException();
+
         repository.deleteById(id);
     }
 

@@ -19,9 +19,9 @@ public class Postagem {
     private String usuario;
     private String texto;
 
-    public Postagem(PostagemDTO dto) {
-        this.usuario = dto.usuario();
-        this.texto = dto.texto();
+    public Postagem(String usuario, String texto) {
+        this.usuario = usuario;
+        this.texto = texto;
     }
 
     public void setTexto(String texto) {
