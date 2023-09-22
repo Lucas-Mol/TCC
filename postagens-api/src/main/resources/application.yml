@@ -18,5 +18,5 @@ server:
 
 env:
     var:
-        service-name: usuario-api
+        service-name: postagens-api
         service-password: X7gNkxEZ9un6
