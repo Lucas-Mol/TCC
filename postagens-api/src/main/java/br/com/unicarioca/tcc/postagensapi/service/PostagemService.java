@@ -1,9 +1,6 @@
 package br.com.unicarioca.tcc.postagensapi.service;
 
-import br.com.unicarioca.tcc.postagensapi.dto.LoginDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemDTO;
-import br.com.unicarioca.tcc.postagensapi.dto.PostagemEdicaoDTO;
-import br.com.unicarioca.tcc.postagensapi.http.AuthClient;
 import br.com.unicarioca.tcc.postagensapi.http.UsuarioClient;
 import br.com.unicarioca.tcc.postagensapi.model.Postagem;
 import br.com.unicarioca.tcc.postagensapi.repository.PostagemRepository;
@@ -14,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +21,6 @@ public class PostagemService {
 
     @Autowired
     UsuarioClient usuarioClient;
-
-    @Autowired
-    AuthClient authClient;
 
     @Value("${env.var.service-name}")
     String serviceName;
@@ -81,9 +74,7 @@ public class PostagemService {
     }
 
     public Page<PostagemDTO> obterPaginacaoPostagensPorSeguidosDoUsuario(String usuario, Pageable paginacao) {
-        var token = authClient.geraTokenService(new LoginDTO(serviceName, servicePassword)).token();
-
-        var usuarios = usuarioClient.getSeguidosDoUsuario(token ,Long.parseLong(usuario));
+        var usuarios = usuarioClient.getSeguidosDoUsuario(Long.parseLong(usuario));
 
         var usuariosId = usuarios.stream()
                 .map(usuarioInputDTO -> String.valueOf(usuarioInputDTO.id()))

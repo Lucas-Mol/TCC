@@ -7,6 +7,4 @@ import br.com.unicarioca.apigateway.apigateway.dto.ValidaTokenDTO;
 public interface AuthClient {
 
     ValidaTokenDTO validaToken(TokenDTO tokenDTO);
-
-    TokenDTO autenticaServico(LoginDTO loginDTO);
 }
