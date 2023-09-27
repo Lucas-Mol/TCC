@@ -1,6 +1,6 @@
 package br.com.unicarioca.tcc.usuariosapi.model;
 
-import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioInputDTO;
+import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioEdicaoInputDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -46,13 +46,13 @@ public class Usuario {
         this.password = encryptedPassword;
     }
 
-    public Usuario(UsuarioInputDTO usuarioDTO) {
+    public Usuario(UsuarioEdicaoInputDTO usuarioDTO) {
         this.id = null;
         this.username = usuarioDTO.username();
         this.password = usuarioDTO.password();
     }
 
-    public Usuario(Long id, UsuarioInputDTO usuarioDTO) {
+    public Usuario(Long id, UsuarioEdicaoInputDTO usuarioDTO) {
         this.id = id;
         this.username = usuarioDTO.username();
         this.password = usuarioDTO.password();

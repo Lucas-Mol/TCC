@@ -6,7 +6,6 @@ import br.com.unicarioca.apigateway.apigateway.exception.TokenValidoException;
 import br.com.unicarioca.apigateway.apigateway.service.AuthHttpClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,7 @@
 package br.com.unicarioca.tcc.usuariosapi.service;
 
-import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioInputDTO;
+import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioCadastroInputDTO;
+import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioEdicaoInputDTO;
 import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioOutputDTO;
 import br.com.unicarioca.tcc.usuariosapi.model.Usuario;
 import br.com.unicarioca.tcc.usuariosapi.repository.UsuarioRepository;
@@ -34,15 +35,15 @@ public class UsuarioService {
         return new UsuarioOutputDTO(usuario);
     }
 
-    public UsuarioOutputDTO criar(UsuarioInputDTO usuarioDTO) {
+    public UsuarioOutputDTO criar(UsuarioCadastroInputDTO usuarioDTO) {
         var usuario = new Usuario(usuarioDTO.username(), encriptador.encriptar(usuarioDTO.password()));
         usuario = usuarioRepository.save(usuario);
 
         return new UsuarioOutputDTO(usuario);
     }
 
-    public UsuarioOutputDTO atualizar(Long id, UsuarioInputDTO usuarioDTO) {
-        var usuario = new Usuario(id, usuarioDTO.username(), encriptador.encriptar(usuarioDTO.password()));
+    public UsuarioOutputDTO atualizar(UsuarioEdicaoInputDTO usuarioDTO) {
+        var usuario = new Usuario(usuarioDTO.id(), usuarioDTO.username(), encriptador.encriptar(usuarioDTO.password()));
         var usuarioAtualizado = usuarioRepository.save(usuario);
 
         return new UsuarioOutputDTO(usuarioAtualizado);

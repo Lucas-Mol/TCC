@@ -1,9 +1,8 @@
 package br.com.unicarioca.tcc.postagensapi.service;
 
-import br.com.unicarioca.tcc.postagensapi.dto.LoginDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemEdicaoDTO;
-import br.com.unicarioca.tcc.postagensapi.http.AuthClient;
+import br.com.unicarioca.tcc.postagensapi.dto.PostagemRemocaoDTO;
 import br.com.unicarioca.tcc.postagensapi.http.UsuarioClient;
 import br.com.unicarioca.tcc.postagensapi.model.Postagem;
 import br.com.unicarioca.tcc.postagensapi.repository.PostagemRepository;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,44 +24,41 @@ public class PostagemService {
     @Autowired
     UsuarioClient usuarioClient;
 
-    @Autowired
-    AuthClient authClient;
-
     @Value("${env.var.service-name}")
     String serviceName;
 
     @Value("${env.var.service-password}")
     String servicePassword;
 
-    public PostagemDTO postar(String usuario, PostagemDTO postagemDTO) {
-        var postagem = repository.save(new Postagem(usuario, postagemDTO.texto()));
+    public PostagemDTO postar(PostagemDTO postagemDTO) {
+        var postagem = repository.save(new Postagem(postagemDTO.usuario(), postagemDTO.texto()));
 
         return new PostagemDTO(postagem);
     }
 
 
-    public PostagemDTO editar(String id, String usuario, String texto) {
+    public PostagemDTO editar(String id, PostagemEdicaoDTO postagemEdicaoDTO) {
         var postagem = repository
                 .findById(id)
                 .orElseThrow(RuntimeException::new);
 
-        if(!usuario.equals(postagem.getUsuario())) throw new RuntimeException();
+        if(!postagemEdicaoDTO.usuario().equals(postagem.getUsuario())) throw new RuntimeException();
 
-        postagem.setTexto(texto);
+        postagem.setTexto(postagemEdicaoDTO.texto());
 
         var postagemEditada = repository.save(postagem);
 
         return new PostagemDTO(postagemEditada);
     }
 
-    public void remover(String usuario, String id) {
+    public void remover(PostagemRemocaoDTO postagemRemocaoDTO) {
         var postagem = repository
-                .findById(id)
+                .findById(postagemRemocaoDTO.id())
                 .orElseThrow(RuntimeException::new);
 
-        if(!usuario.equals(postagem.getUsuario())) throw new RuntimeException();
+        if(!postagemRemocaoDTO.usuario().equals(postagem.getUsuario())) throw new RuntimeException();
 
-        repository.deleteById(id);
+        repository.deleteById(postagemRemocaoDTO.id());
     }
 
     public PostagemDTO obterPostagemPorId(String id) {
@@ -81,9 +76,7 @@ public class PostagemService {
     }
 
     public Page<PostagemDTO> obterPaginacaoPostagensPorSeguidosDoUsuario(String usuario, Pageable paginacao) {
-        var token = authClient.geraTokenService(new LoginDTO(serviceName, servicePassword)).token();
-
-        var usuarios = usuarioClient.getSeguidosDoUsuario(token ,Long.parseLong(usuario));
+        var usuarios = usuarioClient.getSeguidosDoUsuario(Long.parseLong(usuario));
 
         var usuariosId = usuarios.stream()
                 .map(usuarioInputDTO -> String.valueOf(usuarioInputDTO.id()))

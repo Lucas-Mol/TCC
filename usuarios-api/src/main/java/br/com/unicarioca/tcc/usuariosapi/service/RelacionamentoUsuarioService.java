@@ -38,13 +38,13 @@ public class RelacionamentoUsuarioService {
                 .map(UsuarioOutputDTO::new);
     }
 
-    public void seguir(Long idSeguidor, Long idSeguido) {
+    public void seguir(SeguirInputDTO seguirDTO) {
         var seguidor = usuarioRepository
-                .findById(idSeguidor)
+                .findById(seguirDTO.seguidor())
                 .orElseThrow(EntityNotFoundException::new);
 
         var seguido = usuarioRepository
-                .findById(idSeguido)
+                .findById(seguirDTO.seguido())
                 .orElseThrow(EntityNotFoundException::new);
 
         seguidor.getUsuariosSeguidos().add(seguido);
@@ -52,13 +52,13 @@ public class RelacionamentoUsuarioService {
         usuarioRepository.save(seguidor);
     }
 
-    public void deixarSeguir(Long idSeguidor, Long idSeguido) {
+    public void deixarSeguir(SeguirInputDTO seguirDTO) {
         var seguidor = usuarioRepository
-                .findById(idSeguidor)
+                .findById(seguirDTO.seguidor())
                 .orElseThrow(EntityNotFoundException::new);
 
         var seguido = usuarioRepository
-                .findById(idSeguido)
+                .findById(seguirDTO.seguido())
                 .orElseThrow(EntityNotFoundException::new);
 
         seguidor.getUsuariosSeguidos().remove(seguido);

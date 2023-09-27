@@ -4,14 +4,10 @@ import br.com.unicarioca.tcc.postagensapi.dto.PostagemDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemEdicaoDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemListagemUsuariosDTO;
 import br.com.unicarioca.tcc.postagensapi.dto.PostagemRemocaoDTO;
-import br.com.unicarioca.tcc.postagensapi.repository.PostagemRepository;
 import br.com.unicarioca.tcc.postagensapi.service.PostagemService;
-import br.com.unicarioca.tcc.postagensapi.service.token.JWTService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +24,6 @@ public class PostagemController {
 
     @Autowired
     private PostagemService service;
-
-    @Autowired
-    private JWTService jwtService;
 
     @GetMapping
     public Page<PostagemDTO> listarTodos(@PageableDefault(size = 10) Pageable paginacao) {
@@ -64,11 +57,9 @@ public class PostagemController {
 
     @PostMapping
     public ResponseEntity<PostagemDTO> postar(@RequestBody @Valid PostagemDTO postagemDTO,
-                                              UriComponentsBuilder uriBuilder,
-                                              HttpServletRequest request) {
-        var idUsuario = getIdUsuario(request);
+                                              UriComponentsBuilder uriBuilder) {
 
-        var postagem =  service.postar(idUsuario, postagemDTO);
+        var postagem =  service.postar(postagemDTO);
         var uri = uriBuilder.path("/postagens/{id}").buildAndExpand(postagem.id()).toUri();
 
         return ResponseEntity.created(uri).body(postagem);
@@ -76,27 +67,18 @@ public class PostagemController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PostagemDTO> editar(@PathVariable @NotBlank String id,
-                                              @RequestBody @Valid PostagemEdicaoDTO postagemDTO,
-                                              HttpServletRequest request) {
-        var idUsuario = getIdUsuario(request);
+                                              @RequestBody @Valid PostagemEdicaoDTO postagemDTO) {
 
-        var postagemEditada =  service.editar(id, idUsuario, postagemDTO.texto());
+        var postagemEditada =  service.editar(id, postagemDTO);
 
         return ResponseEntity.ok(postagemEditada);
     }
 
     @DeleteMapping
-    public ResponseEntity remover(@RequestBody @Valid PostagemRemocaoDTO postagemDTO,
-                                  HttpServletRequest request) {
-        var idUsuario = getIdUsuario(request);
+    public ResponseEntity remover(@RequestBody @Valid PostagemRemocaoDTO postagemDTO) {
 
-        service.remover(idUsuario, postagemDTO.id());
+        service.remover(postagemDTO);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private String getIdUsuario(HttpServletRequest request) {
-        var token = request.getHeader("Authorization");
-        return jwtService.getUsuario(token);
     }
 }

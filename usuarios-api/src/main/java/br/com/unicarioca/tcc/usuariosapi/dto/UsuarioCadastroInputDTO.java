@@ -2,7 +2,7 @@ package br.com.unicarioca.tcc.usuariosapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record UsuarioInputDTO (
+public record UsuarioCadastroInputDTO(
         @NotBlank
         String username,
         @NotBlank

@@ -1,10 +1,9 @@
 package br.com.unicarioca.tcc.usuariosapi.controller;
 
-import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioInputDTO;
+import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioCadastroInputDTO;
+import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioEdicaoInputDTO;
 import br.com.unicarioca.tcc.usuariosapi.dto.UsuarioOutputDTO;
 import br.com.unicarioca.tcc.usuariosapi.service.UsuarioService;
-import br.com.unicarioca.tcc.usuariosapi.service.token.JWTService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Autowired
-    JWTService jwtService;
-
     @GetMapping
     public Page<UsuarioOutputDTO> listarTodos(@PageableDefault(size = 10) Pageable paginacao) {
         return usuarioService.obterTodos(paginacao);
@@ -40,7 +36,7 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<UsuarioOutputDTO> cadastrar(@RequestBody @Valid UsuarioInputDTO usuarioDTO, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UsuarioOutputDTO> cadastrar(@RequestBody @Valid UsuarioCadastroInputDTO usuarioDTO, UriComponentsBuilder uriBuilder) {
         var usuario =  usuarioService.criar(usuarioDTO);
         var uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
 
@@ -48,12 +44,8 @@ public class UsuarioController {
     }
 
     @PutMapping()
-    public ResponseEntity<UsuarioOutputDTO> atualizar(@RequestBody @Valid UsuarioInputDTO usuarioDTO,
-                                                      HttpServletRequest request) {
-        var token = request.getHeader("Authorization");
-        var idUsuario = Long.parseLong(jwtService.getUsuario(token));
-
-        var usuarioAtualizado =  usuarioService.atualizar(idUsuario, usuarioDTO);
+    public ResponseEntity<UsuarioOutputDTO> atualizar(@RequestBody @Valid UsuarioEdicaoInputDTO usuarioDTO) {
+        var usuarioAtualizado =  usuarioService.atualizar(usuarioDTO);
 
         return ResponseEntity.ok(usuarioAtualizado);
     }
