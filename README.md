@@ -36,3 +36,14 @@ Para as comunicações internas entre os microsserviços se faz necessário o us
 Para as comunicações internas entre os microsserviços se faz necessário o uso somente de um token de usuário (que deve ser passado no header com o nome "Authorization"). Em comunicações que sejam necessárias passar o usuário, ele será identificado diretamente pelo token JWT de usuário passado.
 ### Usafe-arch
 Para as comunicações internas entre os microsserviços não é necessário o uso de tokens. Em comunicações que sejam necessárias passar o usuário, será passado diretamente no body da requisição.
+
+## Tech Stack e conceitos
+- Java 17
+- Spring
+- Spring API Gateway
+- Spring Eureka
+- Docker
+- PostgreSQL
+- Redis
+- MongoDB
+- Token JWT
