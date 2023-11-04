@@ -1,7 +1,7 @@
-package br.com.unicarioca.tcc.postagensapi.security;
+package br.com.unicarioca.tcc.usuariosapi.security;
 
-import br.com.unicarioca.tcc.postagensapi.dto.TokenDTO;
-import br.com.unicarioca.tcc.postagensapi.http.AuthClient;
+import br.com.unicarioca.tcc.usuariosapi.dto.TokenDTO;
+import br.com.unicarioca.tcc.usuariosapi.http.AuthClient;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,28 +13,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
 @Component
-@Order(2)
-public class ServiceFilter extends OncePerRequestFilter {
+@Order(1)
+public class UserFilter extends OncePerRequestFilter {
 
     @Autowired
-    AuthClient authClient;
+    private AuthClient auth;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var token = request.getHeader("service-authentication");
+        var token = request.getHeader("Authorization");
 
         if(token != null && !token.isEmpty()) {
-            var responseValidaToken = authClient.validaToken(new TokenDTO(token));
+            var responseValidaToken = auth.validaToken(new TokenDTO(trataTokenHeader(token)));
 
             if(responseValidaToken.valido()){
                 filterChain.doFilter(request, response);
                 return;
             }
         }
-
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
-}
 
+    private String trataTokenHeader(String token) {
+        return token.replace("Bearer ", "");
+    }
+}
